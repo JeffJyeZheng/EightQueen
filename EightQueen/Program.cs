@@ -1,4 +1,4 @@
-﻿const int ChessSize = 5; // 棋盤大小
+﻿const int ChessSize = 4; // 棋盤大小
 
 var ResultCount = 0; // 解法
 int[,] Chess = new int[ChessSize, ChessSize]; // 棋局分布
