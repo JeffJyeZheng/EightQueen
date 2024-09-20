@@ -1,26 +1,29 @@
-﻿const int ChessCol = 5;
+﻿const int ChessSize = 5; // 棋盤大小
 
-int ResultCount = 1;
-int[,] Chess = new int[ChessCol, ChessCol];
+var ResultCount = 0; // 解法
+int[,] Chess = new int[ChessSize, ChessSize]; // 棋局分布
 
-EightQueen(0, ChessCol, Chess);
+EightQueen(0, Chess);
 
 // 八皇后邏輯
-void EightQueen(int row, int n, int[,] chess)
+void EightQueen(int row, int[,] chess)
 {
     // 將空白棋盤塞入上一次皇后位置
-    int[,] tempChess = CreateTempChess(chess, ChessCol);
+    int[,] tempChess = (int[,])chess.Clone();
 
     // 判斷是否已經到達最後一列
-    if (ChessCol == row)
+    if (ChessSize == row)
     {
         // 到達最後一列表示完成此局
+        ResultCount++;
+
         Console.WriteLine();
         Console.WriteLine($"Solution {ResultCount}");
-        Console.WriteLine();
-        for (int i = 0; i < ChessCol; i++)
+
+        // 印出棋盤
+        for (int i = 0; i < ChessSize; i++)
         {
-            for (int j = 0; j < ChessCol; j++)
+            for (int j = 0; j < ChessSize; j++)
             {
                 if (tempChess[i, j] == 1)
                 {
@@ -30,55 +33,39 @@ void EightQueen(int row, int n, int[,] chess)
                 {
                     Console.Write(" .");
                 }
-
-                //Console.Write($" {tempChess[i, j]}");
             }
+
             Console.WriteLine();
         }
-        ResultCount++;
     }
     else
     {
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j < ChessSize; j++)
         {
             // 判斷位置是否無法下棋
-            if (IsNotRange(row, j, chess))
+            if (IsPutOnQueen(row, j, chess))
             {
-                for (int i = 0; i < ChessCol; i++)
+                for (int i = 0; i < ChessSize; i++)
                 {
                     tempChess[row, i] = 0;
                 }
                 tempChess[row, j] = 1;
 
-                EightQueen(row + 1, n, tempChess);
+                EightQueen(row + 1, tempChess);
             }
         }
     }
 
 }
 
-// 建立空白棋盤
-int[,] CreateTempChess(int[,] chess, int ChessCol)
-{
-    int[,] tempChess = new int[ChessCol, ChessCol];
-    for (int i = 0; i < ChessCol; i++)
-    {
-        for (int j = 0; j < ChessCol; j++)
-        {
-            tempChess[i, j] = chess[i, j];
-        }
-    }
-
-    return tempChess;
-}
-
 // 判斷位置是否無法下棋
-bool IsNotRange(int row, int j, int[,] chess)
+bool IsPutOnQueen(int row, int j, int[,] chess)
 {
-    int i = 0, k = 0;
+    var i = 0;
+    var k = 0;
 
-    //判断列方向
-    for (i = 0; i < ChessCol; i++)
+    //判斷列方向
+    for (i = 0; i < ChessSize; i++)
     {
         if (chess[i, j] != 0)
         {
@@ -86,7 +73,7 @@ bool IsNotRange(int row, int j, int[,] chess)
         }
     }
 
-    //判断左上方
+    //判斷左上方
     for (i = row - 1, k = j - 1; i > -1 && k > -1; --i, --k)
     {
         if (chess[i, k] != 0)
@@ -95,8 +82,8 @@ bool IsNotRange(int row, int j, int[,] chess)
         }
     }
 
-    //判断右上方
-    for (i = row - 1, k = j + 1; i > -1 && k < ChessCol; --i, ++k)
+    //判斷右上方
+    for (i = row - 1, k = j + 1; i > -1 && k < ChessSize; --i, ++k)
     {
         if (chess[i, k] != 0)
         {
@@ -104,8 +91,8 @@ bool IsNotRange(int row, int j, int[,] chess)
         }
     }
 
-    //判断左下方
-    for (i = row + 1, k = j - 1; i < ChessCol && k > -1; ++i, --k)
+    //判斷左下方
+    for (i = row + 1, k = j - 1; i < ChessSize && k > -1; ++i, --k)
     {
         if (chess[i, k] != 0)
         {
@@ -113,8 +100,8 @@ bool IsNotRange(int row, int j, int[,] chess)
         }
     }
 
-    //判断右下方
-    for (i = row + 1, k = j + 1; i < ChessCol && k < ChessCol; ++i, ++k)
+    //判斷右下方
+    for (i = row + 1, k = j + 1; i < ChessSize && k < ChessSize; ++i, ++k)
     {
         if (chess[i, k] != 0)
         {
